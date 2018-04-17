@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Editor</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote.css" />
+	<style type="text/css">
+	.note-mybutton { float: right; }
+	</style>
+</head>
+<body>
+
+	<form onsubmit="return false;">
+        <div class="col-xs-9">
+            <textarea class="editor" name="editor">[[CONTENT-STARTING]]</textarea>
+        </div>
+	</form>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/lang/summernote-tr-TR.min.js"></script>
+
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+
+			var SaveButton = function (context) {
+				var ui = $.summernote.ui;
+
+				var button = ui.button({
+					contents: 'Kaydet',
+					tooltip: '',
+					click: function () {
+						jQuery.submitForm();
+					}
+				});
+
+				return button.render();   // return button as jquery object
+			}
+
+			$(".editor").summernote({
+				lang: "tr-TR",
+				height: 400,
+				focus: true,
+				disableDragAndDrop: true,
+				shortcuts: false,
+				fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New'],
+				toolbar: [
+			        ['style', ['style']],
+    				['font', ['bold', 'strikethrough', 'underline', 'italic', 'superscript', 'subscript', 'clear']],
+			        ['fontsize', ['fontsize']],
+			        ['color', ['color']],
+			        ['para', ['ul', 'ol', 'paragraph']],
+			        ['height', ['height']],
+			        ['insert', ['link', 'picture', 'video']],
+			        ['table', ['table']],
+			        ['codeview', ['codeview']],
+			        ['mybutton', ['hello']]
+		        ],
+		        buttons: {
+					hello: SaveButton
+				},
+				callbacks: {
+					onInit: function(e) {
+						$(".editor").summernote("fullscreen.toggle");
+					}
+				}
+			});
+
+			$(".note-mybutton .btn").removeClass("btn-default").addClass("btn-success");
+		});
+
+		jQuery.submitForm = function() {
+
+			if (!$('.editor').summernote('isEmpty')) {
+
+				var asHTML = $('.editor').summernote('code');;
+
+				var fullURL = '[[FMPURL-SAVE]]&param=' + encodeURIComponent(asHTML);
+
+				window.location = fullURL;
+
+			}
+
+		}
+	</script>
+
+</body>
+</html>
